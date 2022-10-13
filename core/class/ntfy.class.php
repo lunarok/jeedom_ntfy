@@ -38,25 +38,26 @@ class ntfy extends eqLogic {
 
 class ntfyCmd extends cmd {
 	public function execute($_options = array()) {
-		$request_http = new com_http($this->getEqlogic()->getConfiguration('url'));
+		$request_http = curl_init();
+		curl_setopt($request_http, CURLOPT_URL, $this->getEqlogic()->getConfiguration('url'));
+		curl_setopt($request_http, CURLOPT_POST, 1);
+		curl_setopt($request_http, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($request_http, CURLOPT_POSTFIELDS, $_options['message']);
 		if (isset($_options['title'])) {
 			$data= array();
 			if (strpos(';', $_options['title']) === false) {
-				$table = explode("=", $_options['title']);
-				$data[$table[0]] = $table[1];
+				$data[] = $_options['title'];
 			} else {
 				$values = explode(";", $_options['title']);
 				foreach ($values as $value) {
-					$table = explode("=", $value);
-					$data[$table[0]] = $table[1];
+					$data[] = $value;
 				}
 			}
-			$request_http->setHeader($data);
+			curl_setopt($request_http, CURLOPT_HTTPHEADER, $data);
 		}
-		$request_http->setPost($_options['message']);
-		$request_http->setNoReportError(true);
-		log::add('ntfy', 'debug', 'Send notify ' . $_options['message'] . ' with option ' . print_r($_options['title'], true));
-		$output = $request_http->exec(90);
+		log::add('ntfy', 'debug', 'Send notify ' . $_options['message'] . ' with option ' . print_r($data, true));
+		$output = curl_exec($request_http);
+		curl_close($request_http);
 		log::add('ntfy', 'debug', 'Result : ' . $output);
 	}
 
