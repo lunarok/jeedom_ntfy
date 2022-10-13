@@ -51,7 +51,7 @@ class ntfyCmd extends cmd {
 					$data[$table[0]] = $table[1];
 				}
 			}
-			$request_http->setHeader($data));
+			$request_http->setHeader($data);
 		}
 		$request_http->setPost($_options['message']);
 		$request_http->setNoReportError(true);
