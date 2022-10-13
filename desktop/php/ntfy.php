@@ -127,6 +127,12 @@ $eqLogics = eqLogic::byType($plugin->getId());
                 <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="url" placeholder="{{https://ntfy.sh/}}" />
               </div>
             </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">{{Options publish}}</label>
+              <div class="col-sm-3">
+              <a href="https://ntfy.sh/docs/publish/">Lien vers la documentation Ntfy</a>
+              </div>
+            </div>
           </fieldset>
         </form>
       </div>
