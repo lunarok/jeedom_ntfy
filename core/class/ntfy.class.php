@@ -45,7 +45,7 @@ class ntfyCmd extends cmd {
 		curl_setopt($request_http, CURLOPT_POSTFIELDS, $_options['message']);
 		if (isset($_options['title'])) {
 			$data= array();
-			if (strpos(';', $_options['title']) === false) {
+			if (strpos($_options['title'], ';') === false) {
 				$data[] = $_options['title'];
 			} else {
 				$values = explode(";", $_options['title']);
