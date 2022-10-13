@@ -38,7 +38,7 @@ class ntfy extends eqLogic {
 
 class ntfyCmd extends cmd {
 	public function execute($_options = array()) {
-		$request_http = new com_http($_url);
+		$request_http = new com_http($this->getEqlogic()->getConfiguration('url'));
 		if (isset($_options['title'])) {
 			$request_http->setHeader(arg2array($_options['title']));
 		}
