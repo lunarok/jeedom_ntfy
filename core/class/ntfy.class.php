@@ -40,11 +40,22 @@ class ntfyCmd extends cmd {
 	public function execute($_options = array()) {
 		$request_http = new com_http($this->getEqlogic()->getConfiguration('url'));
 		if (isset($_options['title'])) {
-			$request_http->setHeader(arg2array($_options['title']));
+			$data= array();
+			if (strpos(';', $_options['title']) === false) {
+				$table = explode("=", $_options['title']);
+				$data[$table[0]] = $table[1];
+			} else {
+				$values = explode(";", $_options['title']);
+				foreach ($values as $value) {
+					$table = explode("=", $value);
+					$data[$table[0]] = $table[1];
+				}
+			}
+			$request_http->setHeader($data));
 		}
 		$request_http->setPost($_options['message']);
 		$request_http->setNoReportError(true);
-		log::add('ntfy', 'debug', 'Call url ' . $_url . ' with option ' . print_r($_data, true));
+		log::add('ntfy', 'debug', 'Send notify ' . $_options['message'] . ' with option ' . print_r($_options['title'], true));
 		$output = $request_http->exec(90);
 		log::add('ntfy', 'debug', 'Result : ' . $output);
 	}
