@@ -1,0 +1,13 @@
+{
+	"id" : "ntfy",
+	"name" : "Ntfy",
+	"description" : "Permet d'envoyer des notifications sur le service ntfy, y compris une instance personnelle",
+	"licence" : "AGPL",
+	"author" : "lunarok",
+	"require" : "3.3.24",
+	"category" : "communication",
+	"language" : ["fr_FR","en_US"],
+	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile","v4"],
+    "changelog" : "https://lunarok.github.io/jeedom_docs/plugins/ntfy/changelog.html",
+    "documentation" : "https://lunarok.github.io/jeedom_docs/plugins/ntfy/"
+}
