@@ -55,6 +55,9 @@ class ntfyCmd extends cmd {
 			}
 			curl_setopt($request_http, CURLOPT_HTTPHEADER, $data);
 		}
+		if ($this->getEqlogic()->getConfiguration('user','') != '') {
+			curl_setopt($request_http, CURLOPT_USERPWD, $this->getEqlogic()->getConfiguration('user') . ':' . $this->getEqlogic()->getConfiguration('password'));
+		}
 		log::add('ntfy', 'debug', 'Send notify ' . $_options['message'] . ' with option ' . print_r($data, true));
 		$output = curl_exec($request_http);
 		curl_close($request_http);

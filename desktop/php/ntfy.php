@@ -128,6 +128,18 @@ $eqLogics = eqLogic::byType($plugin->getId());
               </div>
             </div>
             <div class="form-group">
+              <label class="col-sm-3 control-label">{{User}}</label>
+              <div class="col-sm-3">
+                <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="user" placeholder="{{Utilisateur}}" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">{{Password}}</label>
+              <div class="col-sm-3">
+                <input type="password" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="password" placeholder="{{Mot de passe}}" />
+              </div>
+            </div>
+            <div class="form-group">
               <label class="col-sm-3 control-label">{{Options publish}}</label>
               <div class="col-sm-3">
               <a href="https://ntfy.sh/docs/publish/">Lien vers la documentation Ntfy</a>
