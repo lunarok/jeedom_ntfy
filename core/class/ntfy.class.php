@@ -43,8 +43,8 @@ class ntfyCmd extends cmd {
 		curl_setopt($request_http, CURLOPT_POST, 1);
 		curl_setopt($request_http, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($request_http, CURLOPT_POSTFIELDS, $_options['message']);
+		$data= array();
 		if (isset($_options['title'])) {
-			$data= array();
 			if (strpos($_options['title'], ';') === false) {
 				$data[] = $_options['title'];
 			} else {
@@ -53,11 +53,14 @@ class ntfyCmd extends cmd {
 					$data[] = $value;
 				}
 			}
-			curl_setopt($request_http, CURLOPT_HTTPHEADER, $data);
 		}
 		if ($this->getEqlogic()->getConfiguration('user','') != '') {
 			log::add('ntfy', 'debug', 'Using auth : ' . $this->getEqlogic()->getConfiguration('user') . ':' . $this->getEqlogic()->getConfiguration('password'));
-			curl_setopt($request_http, CURLOPT_USERPWD, $this->getEqlogic()->getConfiguration('user') . ':' . $this->getEqlogic()->getConfiguration('password'));
+			//curl_setopt($request_http, CURLOPT_USERPWD, $this->getEqlogic()->getConfiguration('user') . ':' . $this->getEqlogic()->getConfiguration('password'));
+			$data[] = 'Authorisation: Basic '. base64_encode($this->getEqlogic()->getConfiguration('user') . ':' . $this->getEqlogic()->getConfiguration('password'));
+		}
+		if (count($data) > 0) {
+			curl_setopt($request_http, CURLOPT_HTTPHEADER, $data);
 		}
 		log::add('ntfy', 'debug', 'Send notify ' . $_options['message'] . ' with option ' . print_r($data, true));
 		$output = curl_exec($request_http);
