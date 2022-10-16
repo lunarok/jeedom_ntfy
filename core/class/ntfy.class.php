@@ -85,7 +85,7 @@ class ntfyCmd extends cmd {
 					'http' => [
 						'method' => 'PUT',
 						'header' => $data,
-						'content' => file_get_contents(realpath($file)))
+						'content' => file_get_contents(realpath($file))
 					]
 				]));
 
