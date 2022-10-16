@@ -78,13 +78,13 @@ class ntfyCmd extends cmd {
 				if (!file_exists(realpath($file))) {
 					continue;
 				}
-				$post['file'] = new CurlFile(realpath($file),mime_content_type($file));
+				$post['file'] = new CurlFile(realpath($file),mime_content_type(realpath($file)));
 				curl_setopt($request_http, CURLOPT_POSTFIELDS, $post);
 				$data[] = 'Filename: ' . $file;
-				$data[] = 'Content-Type: ' . mime_content_type($file);
+				$data[] = 'Content-Type: ' . mime_content_type(realpath($file));
 				curl_setopt($request_http, CURLOPT_HTTPHEADER, $data);
 				$output = curl_exec($request_http);
-				log::add('ntfy', 'debug', 'Send file ' . realpath($file));
+				log::add('ntfy', 'debug', 'Send file ' . realpath($file) . ' ' . mime_content_type(realpath($file)));
 				log::add('ntfy', 'debug', 'Result : ' . $output);
 			}
 		}
