@@ -78,7 +78,7 @@ class ntfyCmd extends cmd {
 				if (!file_exists(realpath($file))) {
 					continue;
 				}
-				$post['file'] = new CurlFile(realpath($file),mime_content_type(realpath($file)));
+				$post = new CurlFile(realpath($file),mime_content_type(realpath($file)));
 				curl_setopt($request_http, CURLOPT_POSTFIELDS, $post);
 				$data[] = 'Filename: ' . $file;
 				$data[] = 'Content-Type: ' . mime_content_type(realpath($file));
