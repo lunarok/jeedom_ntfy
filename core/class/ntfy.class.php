@@ -80,6 +80,8 @@ class ntfyCmd extends cmd {
 				}
 				$post = curl_file_create(realpath($file));
 				curl_setopt($request_http, CURLOPT_POSTFIELDS, $post);
+				$data[] = 'Filename: ' . $file;
+				curl_setopt($request_http, CURLOPT_HTTPHEADER, $data);
 				$output = curl_exec($request_http);
 				log::add('ntfy', 'debug', 'Send file ' . realpath($file));
 				log::add('ntfy', 'debug', 'Result : ' . $output);
