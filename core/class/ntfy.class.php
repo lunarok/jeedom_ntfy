@@ -42,30 +42,47 @@ class ntfyCmd extends cmd {
 		curl_setopt($request_http, CURLOPT_URL, $this->getEqlogic()->getConfiguration('url'));
 		curl_setopt($request_http, CURLOPT_POST, 1);
 		curl_setopt($request_http, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($request_http, CURLOPT_POSTFIELDS, $_options['message']);
-		$data= array();
 		if (isset($_options['title'])) {
+			$data= array();
 			if (strpos($_options['title'], ';') === false) {
-				$data[] = $_options['title'];
+				$data[] = trim($_options['title']);
 			} else {
 				$values = explode(";", $_options['title']);
 				foreach ($values as $value) {
-					$data[] = $value;
+					$data[] = trim($value);
+					$test = explode(":", $value);
+					if (trim($test[0]) == 'Filename') {
+						$_options['files'][] = trim($test[1]);
+					}
 				}
 			}
+			curl_setopt($request_http, CURLOPT_HTTPHEADER, $data);
 		}
 		if ($this->getEqlogic()->getConfiguration('user','') != '') {
 			log::add('ntfy', 'debug', 'Using auth : ' . $this->getEqlogic()->getConfiguration('user') . ':' . $this->getEqlogic()->getConfiguration('password'));
 			curl_setopt($request_http, CURLOPT_USERPWD, $this->getEqlogic()->getConfiguration('user') . ':' . $this->getEqlogic()->getConfiguration('password'));
 			//$data[] = 'Authorisation: Basic '. base64_encode($this->getEqlogic()->getConfiguration('user') . ':' . $this->getEqlogic()->getConfiguration('password'));
 		}
-		if (count($data) > 0) {
-			curl_setopt($request_http, CURLOPT_HTTPHEADER, $data);
+		if ($_options['message'] != '') {
+			curl_setopt($request_http, CURLOPT_POSTFIELDS, $_options['message']);
+			log::add('ntfy', 'debug', 'Send notify ' . $_options['message'] . ' with option ' . print_r($data, true));
+			$output = curl_exec($request_http);
+			log::add('ntfy', 'debug', 'Result : ' . $output);
 		}
-		log::add('ntfy', 'debug', 'Send notify ' . $_options['message'] . ' with option ' . print_r($data, true));
-		$output = curl_exec($request_http);
+		if (isset($_options['files']) && is_array($_options['files'])) {
+			foreach ($_options['files'] as $file) {
+				if (trim($file) == '' ) {
+					continue;
+				}
+				if (!file_exists($file)) {
+					continue;
+				}
+				$post = new CURLFile(realpath($file));
+				curl_setopt($request_http, CURLOPT_POSTFIELDS, $post);
+				$output = curl_exec($request_http);
+			}
+		}
 		curl_close($request_http);
-		log::add('ntfy', 'debug', 'Result : ' . $output);
 	}
 
 }
