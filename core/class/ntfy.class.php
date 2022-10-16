@@ -78,16 +78,27 @@ class ntfyCmd extends cmd {
 				if (!file_exists(realpath($file))) {
 					continue;
 				}
-				curl_setopt($request_http, CURLOPT_CUSTOMREQUEST, "PUT");
+
+				file_get_contents($this->getEqlogic()->getConfiguration('url'), false, stream_context_create([
+					'http' => [
+						'method' => 'PUT',
+						'header' =>
+							"Filename: " . $file,
+							'Authorization: Basic ' . base64_encode($this->getEqlogic()->getConfiguration('user') . ':' . $this->getEqlogic()->getConfiguration('password'))
+						'content' => file_get_contents(realpath($file)))
+					]
+				]));
+
+				/*curl_setopt($request_http, CURLOPT_CUSTOMREQUEST, "PUT");
 				curl_setopt($request_http, CURLOPT_RETURNTRANSFER, 1);
 				$post = new CurlFile(realpath($file),mime_content_type(realpath($file)));
 				curl_setopt($request_http, CURLOPT_POSTFIELDS, $post);
 				$data[] = 'Filename: ' . $file;
 				$data[] = 'Content-Type: ' . mime_content_type(realpath($file));
 				curl_setopt($request_http, CURLOPT_HTTPHEADER, $data);
-				$output = curl_exec($request_http);
+				$output = curl_exec($request_http);*/
 				log::add('ntfy', 'debug', 'Send file ' . realpath($file) . ' ' . mime_content_type(realpath($file)));
-				log::add('ntfy', 'debug', 'Result : ' . $output);
+				//log::add('ntfy', 'debug', 'Result : ' . $output);
 			}
 		}
 		curl_close($request_http);
