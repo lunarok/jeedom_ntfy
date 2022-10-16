@@ -78,13 +78,13 @@ class ntfyCmd extends cmd {
 				if (!file_exists(realpath($file))) {
 					continue;
 				}
-
+				$data[] = 'Filename: ' . $file;
+				$data[] = 'Content-Type: ' . mime_content_type(realpath($file));
+				$data[] = 'Authorization: Basic ' . base64_encode($this->getEqlogic()->getConfiguration('user') . ':' . $this->getEqlogic()->getConfiguration('password'));
 				file_get_contents($this->getEqlogic()->getConfiguration('url'), false, stream_context_create([
 					'http' => [
 						'method' => 'PUT',
-						'header' =>
-							"Filename: " . $file,
-							'Authorization: Basic ' . base64_encode($this->getEqlogic()->getConfiguration('user') . ':' . $this->getEqlogic()->getConfiguration('password'))
+						'header' => $data,
 						'content' => file_get_contents(realpath($file)))
 					]
 				]));
