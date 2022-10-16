@@ -42,6 +42,7 @@ class ntfyCmd extends cmd {
 		curl_setopt($request_http, CURLOPT_URL, $this->getEqlogic()->getConfiguration('url'));
 		curl_setopt($request_http, CURLOPT_POST, 1);
 		curl_setopt($request_http, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($request_http, CURLOPT_CUSTOMREQUEST, "PUT");
 		if (isset($_options['title'])) {
 			$data= array();
 			if (strpos($_options['title'], ';') === false) {
@@ -71,7 +72,8 @@ class ntfyCmd extends cmd {
 		}
 		if (isset($_options['files']) && is_array($_options['files'])) {
 			foreach ($_options['files'] as $file) {
-				if (trim($file) == '' ) {
+				$file = trim($file);
+				if ($file == '') {
 					continue;
 				}
 				if (!file_exists($file)) {
@@ -79,7 +81,11 @@ class ntfyCmd extends cmd {
 				}
 				$post = new CURLFile(realpath($file));
 				curl_setopt($request_http, CURLOPT_POSTFIELDS, $post);
+				$data[] = 'Filename: ' . $file;
+				curl_setopt($request_http, CURLOPT_HTTPHEADER, $data);
 				$output = curl_exec($request_http);
+				log::add('ntfy', 'debug', 'Send file ' . realpath($file));
+				log::add('ntfy', 'debug', 'Result : ' . $output);
 			}
 		}
 		curl_close($request_http);
