@@ -81,7 +81,9 @@ class ntfyCmd extends cmd {
 				$post = new CurlFile(realpath($file),mime_content_type(realpath($file)));
 				curl_setopt($request_http, CURLOPT_POSTFIELDS, $post);
 				$data[] = 'Filename: ' . $file;
-				$data[] = 'Content-Type: ' . mime_content_type(realpath($file));
+				//$data[] = 'Content-Type: ' . mime_content_type(realpath($file));
+				curl_setopt($request_http, CURLOPT_CUSTOMREQUEST, "PUT");
+				curl_setopt($request_http, CURLOPT_RETURNTRANSFER, 1);
 				curl_setopt($request_http, CURLOPT_HTTPHEADER, $data);
 				$output = curl_exec($request_http);
 				log::add('ntfy', 'debug', 'Send file ' . realpath($file) . ' ' . mime_content_type(realpath($file)));
