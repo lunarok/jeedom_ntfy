@@ -60,7 +60,7 @@ class ntfyCmd extends cmd {
 		if(isset($_options['answer'])){
 			  $action = 'Actions:';
 			  foreach($_options['answer'] as $answer){
-			    	$action .= 'http, '.$answer.', '.$this->generateAskResponseLink($answer).', method=GET, clear=true;';
+			    	$action .= 'http, '.$answer.', '.$this->generateAskResponseLink($answer).', method=POST, clear=true;';
 			  }
 			  $data[] = $action;
 			  $data[] = 'Tags: question';
