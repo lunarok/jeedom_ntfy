@@ -60,9 +60,10 @@ class ntfyCmd extends cmd {
 		if(isset($_options['answer'])){
 			  $action = 'Actions:';
 			  foreach($_options['answer'] as $answer){
-			    	$action .= 'http, '.$answer.', '.$this->generateAskResponseLink($answer).', method=GET;';
+			    	$action .= 'http, '.$answer.', '.$this->generateAskResponseLink($answer).', method=GET, clear=true;';
 			  }
 			  $data[] = $action;
+			  $data[] = 'Tags: question';
 		}
 		if(count($data) != 0){
 			curl_setopt($request_http, CURLOPT_HTTPHEADER, $data); 
