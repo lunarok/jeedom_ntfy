@@ -73,6 +73,9 @@ class ntfyCmd extends cmd {
 			curl_setopt($request_http, CURLOPT_USERPWD, $this->getEqlogic()->getConfiguration('user') . ':' . $this->getEqlogic()->getConfiguration('password'));
 			//$data[] = 'Authorisation: Basic '. base64_encode($this->getEqlogic()->getConfiguration('user') . ':' . $this->getEqlogic()->getConfiguration('password'));
 		}
+		if ($this->getEqlogic()->getConfiguration('user','') == '' && $this->getEqlogic()->getConfiguration('password','') != '') {
+			curl_setopt($request_http, CURLOPT_USERPWD, ':' . $this->getEqlogic()->getConfiguration('password'));
+		}
 		if ($_options['message'] != '') {
 			curl_setopt($request_http, CURLOPT_POSTFIELDS, $_options['message']);
 			log::add('ntfy', 'debug', 'Send notify ' . $_options['message'] . ' with option ' . print_r($data, true));
