@@ -42,8 +42,8 @@ class ntfyCmd extends cmd {
 		curl_setopt($request_http, CURLOPT_URL, $this->getEqlogic()->getConfiguration('url'));
 		curl_setopt($request_http, CURLOPT_POST, 1);
 		curl_setopt($request_http, CURLOPT_RETURNTRANSFER, true);
+		$data= array();
 		if (isset($_options['title'])) {
-			$data= array();
 			if (strpos($_options['title'], ';') === false) {
 				$data[] = trim($_options['title']);
 			} else {
@@ -56,7 +56,17 @@ class ntfyCmd extends cmd {
 					}
 				}
 			}
-			curl_setopt($request_http, CURLOPT_HTTPHEADER, $data);
+		}
+		if(isset($_options['answer'])){
+			  $action = 'Actions:';
+			  foreach($_options['answer'] as $answer){
+			    	$action .= 'http, '.$answer.', '.$this->generateAskResponseLink($answer).', method=POST, clear=true;';
+			  }
+			  $data[] = $action;
+			  $data[] = 'Tags: question';
+		}
+		if(count($data) != 0){
+			curl_setopt($request_http, CURLOPT_HTTPHEADER, $data); 
 		}
 		if ($this->getEqlogic()->getConfiguration('user','') != '') {
 			log::add('ntfy', 'debug', 'Using auth : ' . $this->getEqlogic()->getConfiguration('user') . ':' . $this->getEqlogic()->getConfiguration('password'));
@@ -68,6 +78,7 @@ class ntfyCmd extends cmd {
 			log::add('ntfy', 'debug', 'Send notify ' . $_options['message'] . ' with option ' . print_r($data, true));
 			$output = curl_exec($request_http);
 			log::add('ntfy', 'debug', 'Result : ' . $output);
+			curl_close($request_http);
 		}
 		if (isset($_options['files']) && is_array($_options['files'])) {
 			foreach ($_options['files'] as $file) {
@@ -101,7 +112,6 @@ class ntfyCmd extends cmd {
 				//log::add('ntfy', 'debug', 'Result : ' . $output);
 			}
 		}
-		curl_close($request_http);
 	}
 
 }
